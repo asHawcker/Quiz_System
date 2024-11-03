@@ -1,18 +1,9 @@
-#include "Question.hpp"
+#include "QuestionSet.hpp"
 
 int main(){
 
+    QuestionSet qs("1",5,"qdata.csv");
+    qs.show();
     
-    ifstream file("qdata.csv");
-
-        char line[1000];
-
-        while (file.getline(line, sizeof(line)))
-        {
-            createQuestion(line).show();
-        }
-
-        file.close();
-
     return 0;
 }

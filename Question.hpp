@@ -2,7 +2,11 @@
 #define QUESTION
 #include <iostream>
 #include <fstream>
+#include <cstring>
 using namespace std;
+
+int stringToInt(const char*);
+
 class Question
 {
 
@@ -74,8 +78,30 @@ public:
             cout << answer[i];
         cout << endl;
     }
+    int getID(){return stringToInt(setID);}
+    Question& operator=(const Question& other) {
+        if (this == &other)
+            return *this;
 
-    
+        delete[] setID;
+        delete[] text;
+        delete[] author;
+        delete[] answer;
+
+        setID = new char[std::strlen(other.setID) + 1];
+        std::strcpy(setID, other.setID);
+
+        text = new char[std::strlen(other.text) + 1];
+        std::strcpy(text, other.text);
+
+        author = new char[std::strlen(other.author) + 1];
+        std::strcpy(author, other.author);
+
+        answer = new char[std::strlen(other.answer) + 1];
+        std::strcpy(answer, other.answer);
+
+        return *this;
+    }
 };
 Question createQuestion(const char *l)
 {
@@ -106,5 +132,17 @@ Question createQuestion(const char *l)
 
     return q;
 }
-
+int stringToInt(const char* str) {
+    int num = 0;
+    int sign = 1;
+    if (*str == '-') {
+        sign = -1;
+        ++str;
+    }
+    while (*str) {
+        num = num * 10 + (*str - '0');
+        ++str;
+    }
+    return num * sign;
+}
 #endif
