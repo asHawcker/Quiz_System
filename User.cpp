@@ -7,12 +7,17 @@
 
 using namespace std;
 
-static string filename = "UserData.csv";
-
 User::User(int a) : username(""), age(0), email(""), pass(""), type(a) {}
 
-void User::signup(int x = 0)
+void User::signup(int x)
 {
+    string filename;
+
+    if (type == 0)
+        filename = "AdminData.csv";
+    else if (type == 1)
+        filename = "PlayerData.csv";
+
     ofstream file;
     file.open(filename, ios::app);
     if (!file.is_open())
@@ -50,7 +55,7 @@ void User::signup(int x = 0)
 
 void User::signin()
 {
-    string searchName;
+    string searchName, pw;
     cout << "Enter your UserName: ";
     cin >> searchName;
 
@@ -59,10 +64,25 @@ void User::signin()
         cout << "User with the name '" << searchName << "' not found.\n"
              << endl;
     }
+    cout << "Enter password: ";
+    getline(cin, pw);
+    if (pw != pass)
+    {
+        cout << "Incorrect password" << endl;
+        return;
+    }
+    cout << "Signed in to yout account" << endl;
 }
 
 bool User::search(const string &searchName)
 {
+    string filename;
+
+    if (type == 0)
+        filename = "AdminData.csv";
+    else if (type == 1)
+        filename = "PlayerData.csv";
+        
     ifstream file(filename);
     if (!file.is_open())
     {
