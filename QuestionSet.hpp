@@ -14,7 +14,12 @@ public:
     QuestionSet(const char*, int, const char*);
     ~QuestionSet();
     int show();
-
+    int getCount(){
+        return count;
+    }
+    Question getQuestion(int x){
+        return set[x%count];
+    }
 };
 int AddQuestion();
 
