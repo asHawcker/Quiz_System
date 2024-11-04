@@ -2,6 +2,11 @@
 
 #define pin 123456
 
+Admin::Admin()
+{
+    
+}
+
 void Admin::initUser()
 {
     int p;
