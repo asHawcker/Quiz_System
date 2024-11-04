@@ -10,6 +10,7 @@ protected:
     string email;
     string pass;
     int type;   //1 for player  0 for admin
+    
 
 public:
     User(int a=1);

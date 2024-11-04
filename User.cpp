@@ -11,7 +11,7 @@ static string filename = "UserData.csv";
 
 User::User(int a) : username(""), age(0), email(""), pass(""), type(a) {}
 
-void User::signup(int x = 0)
+void User::signup(int x)
 {
     ofstream file;
     file.open(filename, ios::app);
@@ -50,7 +50,7 @@ void User::signup(int x = 0)
 
 void User::signin()
 {
-    string searchName;
+    string searchName, pw;
     cout << "Enter your UserName: ";
     cin >> searchName;
 
@@ -59,6 +59,14 @@ void User::signin()
         cout << "User with the name '" << searchName << "' not found.\n"
              << endl;
     }
+    cout << "Enter password: ";
+    getline(cin, pw);
+    if (pw != pass)
+    {
+        cout << "Incorrect password" << endl;
+        return;
+    }
+    cout << "Signed in to yout account" << endl;
 }
 
 bool User::search(const string &searchName)
