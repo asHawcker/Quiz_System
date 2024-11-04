@@ -25,7 +25,16 @@ public:
     int show();
     int getID();
     Question& operator=(const Question&);
-
+    int getXP(){return points;}
+    char* getAnswer(){
+        return answer;
+    }
+    char* getText(){
+        return text;
+    }
+    char* getAuthor(){
+        return author;
+    }
 };
 Question createQuestion(const char *);
 int stringToInt(const char* str);

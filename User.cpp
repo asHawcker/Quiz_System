@@ -11,7 +11,7 @@ static string filename = "UserData.csv";
 
 User::User(int a) : username(""), age(0), email(""), pass(""), type(a) {}
 
-void User::signup(int x = 0)
+void User::signup(int x)
 {
     ofstream file;
     file.open(filename, ios::app);
