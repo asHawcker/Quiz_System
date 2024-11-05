@@ -19,6 +19,9 @@ public:
     void play(const QuestionSet &qset);
 
     void saveToCSV();
+
+    void signIn();
+    void signUp(int x);
 };
 
 #endif
