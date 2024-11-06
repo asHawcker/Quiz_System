@@ -34,7 +34,7 @@ QuestionSet::QuestionSet(const char* id, int s, const char* filename){
 QuestionSet::~QuestionSet(){
     fstream fi;
     fi.open("qdata.csv", ios::out);
-
+    cout<<"HERE";
     for (int i=0;i<getCount();i++){
         Question temp;
         temp = getQuestion(i);

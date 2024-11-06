@@ -14,7 +14,7 @@ void Player :: initUser()
          << endl;
 
     int n=0;
-    while (n <= 0 && n >= 3)
+    
     {
         cout << "Enter choice: ";
         cin >> n;
@@ -24,17 +24,6 @@ void Player :: initUser()
             signIn();
             break;
         case 2:
-            cout << "Enter usernname : ";
-            cin >> username;
-            cout << "Enter password : ";
-            cin >> pass;
-            cout << "Enter email : ";
-            cin >> email;
-            cout << "Enter age : ";
-            cin >> age;
-            type = 1;
-            level = 0;
-            xp = 0;
             signUp(0);
             break;
         default:
@@ -48,7 +37,7 @@ void Player:: play(const QuestionSet &qset)
     int currentscore = 0; // score of the current quiz
     for (int i=0;i<qset.getCount();i++)
     {
-        cout<<"Question"<< "(" << i<<"/" <<qset.getCount() << ")" << endl
+        cout<<"\nQuestion"<< "(" << i+1 <<"/" <<qset.getCount() << ")" << endl
             << qset.getQuestion(i).getText()<<endl;
 
         cout<<"Enter Answer : ";
@@ -69,8 +58,8 @@ void Player:: play(const QuestionSet &qset)
         }
 
     }
-    level = xp%100;
-    cout << "Quiz Completed" << endl << "Your Score is : " <<currentscore <<endl;
+    level = xp/100;
+    cout << "\n\nQuiz Completed." << endl << "Your Score is : " <<currentscore <<endl;
     saveToCSV();
 }
 
@@ -80,7 +69,7 @@ void Player :: saveToCSV()
     ifstream fileIn(filename);
     ofstream fileOut("temp.csv");
 
-    if (!fileIn.is_open() || !fileOut.is_open()) 
+    if (!fileIn.is_open() || !fileOut.is_open())
     {
         cout << "Failed to open the file" << endl;
         return;
@@ -126,17 +115,16 @@ void Player :: saveToCSV()
     remove(filename.c_str());
     rename("temp.csv", filename.c_str());
 
-    cout << "Player information saved successfully." << endl;
+    // cout << "Player information saved successfully." << endl;
+
 }
 
 void Player :: signUp(int x)
 {
     string filename;
 
-    if (type == 0)
-        filename = "AdminData.csv";
-    else if (type == 1)
-        filename = "PlayerData.csv";
+    
+    filename = "PlayerData.csv";
 
     ofstream file;
     file.open(filename, ios::app);
@@ -149,7 +137,7 @@ void Player :: signUp(int x)
     while (x == 0)
     {
         cout << "Enter username: ";
-        getline(cin, username);
+        cin>> username;
         if (search(username))
             cout << "Username already in use. Please try another name.\n";
         else
@@ -161,7 +149,7 @@ void Player :: signUp(int x)
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     cout << "Enter your email: ";
-    getline(cin, email);
+    cin>>email;
 
     cout << "Enter your password: ";
     cin >> pass;
@@ -175,7 +163,7 @@ void Player :: signUp(int x)
          << endl;
 }
 
-void Player :: signIn()
+int Player :: signIn()
 {
     string InputUsername, InputPassword;
     cout << "Enter username : ";
@@ -190,7 +178,7 @@ void Player :: signIn()
     if (!file.is_open())
     {
         cout << "Failed to open the file." << endl;
-        return;
+        return -1;//file Not Found
     }
 
     string line;
@@ -227,16 +215,17 @@ void Player :: signIn()
             else{
                 cout << "Wrong password. Please try again." << endl;
             }
-
+            file.close();
+            return 1;
             break;
         } 
-
-        if(!userFound)
-        {
-            cout << "USername not found"<<endl;
-        }
-
-        file.close();
+        
+    }
+    file.close();
+    if(!userFound)
+    {
+        cout << "Username not found"<<endl;
+        return 404;
     }
 
 }

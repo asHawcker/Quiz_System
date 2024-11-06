@@ -31,7 +31,7 @@ public:
     int getCount() const{
         return count;
     }
-    Question getQuestion(int x) const{
+    Question& getQuestion(int x) const{
         if (x<count) return set[x];
         else return set[x%count];
     }

@@ -20,7 +20,7 @@ public:
 
     void saveToCSV();
 
-    void signIn();
+    int signIn();
     void signUp(int x);
 };
 
