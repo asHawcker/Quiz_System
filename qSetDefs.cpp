@@ -7,7 +7,3 @@ int QuestionSet::show(){
     return 0;
 }
 
-int AddQuestion(){
-    
-    return 0;
-}

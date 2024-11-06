@@ -4,8 +4,12 @@
 
 int main(){
 
-    User u1(0);
-    u1.signin();   
-    
+    QuestionSet q("1", 5, "qdata.csv");
+    q.show();
+    Question q1("1","newQ","ME","peacock",90);
+    AddQuestion(q,q1);
+    cout<<"\n\n----------------------------"<<endl;
+    q.show();
+
     return 0;
 }

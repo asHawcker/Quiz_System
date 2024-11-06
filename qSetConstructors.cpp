@@ -32,5 +32,17 @@ QuestionSet::QuestionSet(const char* id, int s, const char* filename){
     file.close();
 }
 QuestionSet::~QuestionSet(){
+    fstream fi;
+    fi.open("qdata.csv", ios::out);
+
+    for (int i=0;i<getCount();i++){
+        Question temp;
+        temp = getQuestion(i);
+        fi<<temp.getID()<<","<<temp.getText()<<","<<temp.getAuthor()<<","<<temp.getAnswer()<<","<<temp.getXP()<<"\n";
+    }
+
+    fi.close();
+
+    delete []set;
     
 }
