@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <limits>
 using namespace std;
 void Player :: initUser()
 {
@@ -34,7 +35,7 @@ void Player :: initUser()
             type = 1;
             level = 0;
             xp = 0;
-            signUp();
+            signUp(0);
             break;
         default:
             cout << "Invalid choice." << endl;
@@ -128,22 +129,114 @@ void Player :: saveToCSV()
     cout << "Player information saved successfully." << endl;
 }
 
+void Player :: signUp(int x)
+{
+    string filename;
+
+    if (type == 0)
+        filename = "AdminData.csv";
+    else if (type == 1)
+        filename = "PlayerData.csv";
+
+    ofstream file;
+    file.open(filename, ios::app);
+    if (!file.is_open())
+    {
+        cerr << "Failed to open the file." << endl;
+        return;
+    }
+
+    while (x == 0)
+    {
+        cout << "Enter username: ";
+        getline(cin, username);
+        if (search(username))
+            cout << "Username already in use. Please try another name.\n";
+        else
+            break;
+    }
+
+    cout << "Enter your age: ";
+    cin >> age;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "Enter your email: ";
+    getline(cin, email);
+
+    cout << "Enter your password: ";
+    cin >> pass;
+
+    type = 1;
+    level = xp = 0;
+    file << username << "," << age << "," << email << "," << pass << "," << type << "," << level << "," << xp << "\n";
+    file.close();
+
+    cout << "Information saved successfully.\n"
+         << endl;
+}
+
 void Player :: signIn()
 {
-    const string filename = "PlayerData.csv";
-    ifstream fileIn(filename);
+    string InputUsername, InputPassword;
+    cout << "Enter username : ";
+    cin >> InputUsername;
+    cout << "Enter password : ";
+    cin >> InputPassword;
 
-    if (!fileIn.is_open())
+    bool userFound = false;
+
+    ifstream file("PlayerData.csv");
+
+    if (!file.is_open())
     {
-        cout << "Failed to open the file" << endl;
+        cout << "Failed to open the file." << endl;
         return;
     }
 
     string line;
-    bool userFound = false;
-
-    while (getline(fileIn,line))
+    while (getline(file, line))
     {
-        stringstream ss
+        stringstream ss(line);
+        string fileUsername, filePassword, fileAge, fileEmail, fileType, fileLevel, fileXP;
+        
+        getline(ss,fileUsername,',');
+        getline(ss,fileAge,',');
+        getline(ss,fileEmail,',');
+        getline(ss,filePassword, ',');
+        getline(ss,fileType,',');
+        getline(ss,fileLevel,',');
+        getline(ss,fileXP,',');
+
+        if (InputUsername == fileUsername)
+        {
+            userFound = true;
+
+            if(InputPassword == filePassword)
+            {
+                username = fileUsername;
+                age = stoi(fileAge);
+                email = fileEmail;
+                pass = filePassword;
+                type = stoi(fileType);
+                level = stoi(fileLevel);
+                xp = stoi(fileXP);
+                cout << "Logged in successfully." << endl;
+                break;
+            }
+
+            else{
+                cout << "Wrong password. Please try again." << endl;
+            }
+
+            break;
+        } 
+
+        if(!userFound)
+        {
+            cout << "USername not found"<<endl;
+        }
+
+        file.close();
     }
+
 }
