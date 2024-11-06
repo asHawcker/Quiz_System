@@ -18,6 +18,7 @@ int Question::show()
     cout << endl;
     cout<<"Points : "<< points;
     cout << endl;
+    return 0;
 }
 
 int Question::getID(){
