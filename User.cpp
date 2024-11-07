@@ -29,19 +29,21 @@ void User::signup(int x)
     while (x == 0)
     {
         cout << "Enter username: ";
-        getline(cin, username);
+        cin >> username;
         if (search(username))
-            cout << "Username already in use. Please try another name.\n";
+        {
+            cout << "Username already in use.\n";
+            return;
+        }
         else
             break;
     }
 
     cout << "Enter your age: ";
     cin >> age;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     cout << "Enter your email: ";
-    getline(cin, email);
+    cin >> email;
 
     cout << "Enter your password: ";
     cin >> pass;
@@ -53,7 +55,7 @@ void User::signup(int x)
          << endl;
 }
 
-void User::signin()
+int User::signin()
 {
     string searchName, pw;
     cout << "Enter your UserName: ";
@@ -63,15 +65,18 @@ void User::signin()
     {
         cout << "User with the name '" << searchName << "' not found.\n"
              << endl;
+        return 0;
     }
     cout << "Enter password: ";
-    getline(cin, pw);
+    cin >> pw;
+
     if (pw != pass)
     {
         cout << "Incorrect password" << endl;
-        return;
+        return 0;
     }
-    cout << "Signed in to yout account" << endl;
+    cout << "Signed in to your account" << endl;
+    return 1;
 }
 
 bool User::search(const string &searchName)
@@ -82,7 +87,7 @@ bool User::search(const string &searchName)
         filename = "AdminData.csv";
     else if (type == 1)
         filename = "PlayerData.csv";
-        
+
     ifstream file(filename);
     if (!file.is_open())
     {
@@ -142,6 +147,14 @@ bool User::extractUserInfo(const string &line)
 bool User::checkPass(const string &p) const
 {
     return pass == p;
+}
+
+void User::printdetails()
+{
+    cout << "Username: " << username << endl
+         << "Age: " << age << endl
+         << "E-Mail: " << email << endl
+         << "Password: *********" << endl;
 }
 
 istream &operator>>(istream &in, User &u)

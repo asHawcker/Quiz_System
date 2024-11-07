@@ -1,4 +1,4 @@
-#include"User.hpp"
+#include "User.hpp"
 
 class Admin : public User
 {
@@ -7,7 +7,6 @@ private:
 
 public:
     Admin();
-    void initUser();
-    void setQns();
-
+    void AdminInterface();
+    void Userlogin();
 };
