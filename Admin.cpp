@@ -1,6 +1,7 @@
 #include "Admin.hpp"
 #include "QuestionSet.hpp"
 #include "Question.hpp"
+#include <limits>
 #define pin 123456
 
 Admin::Admin() : User(0)
@@ -14,7 +15,7 @@ void Admin::AdminInterface()
     {
         int n;
         char setID[10];
-        cout << "\033[2J\033[H";
+        //cout << "\033[2J\033[H";
 
         cout << "\tAdmin" << endl
              << "Select option: " << endl
@@ -24,6 +25,13 @@ void Admin::AdminInterface()
              << "4. See account details" << endl
              << "5. Back" << endl;
         cin >> n;
+        if (cin.fail())
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid Input. Please Enter a valid integer input." << endl;
+        }
+
         if (n == 1)
         {
             cout << "Enter set ID: " << endl;
@@ -44,6 +52,45 @@ void Admin::AdminInterface()
         }
         else if (n == 2)
         {
+            while (1)
+                {
+                    int choice;
+                    cout << "\tRemove Question" << endl;
+                    cout << "Select option: " << endl
+                        << "1. Show questions" << endl
+                        << "2. Remove Question" << endl
+                        << "3. Back" << endl;
+                    cin >> choice;
+                    if (cin.fail())
+                    {
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        cout << "Invalid Input. Please Enter a valid integer input." << endl;
+                        continue;
+                    }
+                    
+                    if (choice == 1)
+                    {
+                        QuestionSet q(setID, 10, "qdata.csv");
+                        q.show();
+                    }
+                    else if (choice == 2)
+                    {
+                        int qno;
+                        cout << "Enter question number: ";
+                        cin >> qno;
+                        QuestionSet q(setID, 10, "qdata.csv");
+                        removeQuestion(q, qno);
+                    }
+                    else if (choice == 3)
+                    {
+                        break;  // Break out of the inner loop to return to main menu
+                    }
+                    else
+                    {
+                        cout << "Invalid choice" << endl;
+                    }
+             }
         }
         else if (n == 3)
         {

@@ -3,20 +3,17 @@
 
 int Question::show()
 {
-    cout << setID << " | ";
-    cout << "Question: ";
     for (int i = 0; text[i] != '\0'; i++)
         cout << text[i];
-    cout << endl
+    cout << " | "
             << "Author: ";
     for (int i = 0; author[i] != '\0'; i++)
         cout << author[i];
-    cout << endl
+    cout << " | "
             << "Answer: ";
     for (int i = 0; answer[i] != '\0'; i++)
         cout << answer[i];
-    cout << endl;
-    cout<<"Points : "<< points;
+    cout << " | ";
     cout << endl;
     return 0;
 }
