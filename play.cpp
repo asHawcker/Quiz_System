@@ -5,31 +5,63 @@
 #include <iostream>
 #include <limits>
 using namespace std;
-void Player :: initUser()
-{
-    cout << "Player Interface"<<endl
-         << "Choose option: " << endl
-         << "1. Sign in" << endl
-         << "2. Sign up" << endl
-         << endl;
 
+int Player :: initUser()
+{
     int n=0;
-    
+    int loggedin = 0;
+
+    while (1)
     {
+        cout << "Welcome to Quiz Game"<<endl
+        << "Choose option: " << endl
+        << "1. Sign in" << endl
+        << "2. Sign up" << endl
+        << "3. Back to Main Menu" << endl;
+
         cout << "Enter choice: ";
         cin >> n;
+        if (cin.fail())
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid Input. Please Enter a valid integer input." << endl;
+        }
+
         switch (n)
         {
-        case 1:
-            signIn();
-            break;
-        case 2:
-            signUp(0);
-            break;
-        default:
-            cout << "Invalid choice." << endl;
+            case 1:
+            {
+                loggedin = signIn();
+                if (loggedin == 1)
+                {
+                    return 1;
+                }
+                break;
+            }
+            case 2:
+            {
+                signUp(0);
+                break;
+            }
+            case 3:
+            {
+                return 0;
+                break;
+            }
+            default:
+                cout << "Invalid choice." << endl;
         }
     }
+}
+
+void Player :: display()
+{
+    cout << "Name: " << username << endl;
+    cout << "Age: " << age << endl;
+    cout << "Email: " << email << endl;
+    cout << "Level: " << level << endl;
+    cout << "XP: " << xp << endl;
 }
 
 void Player:: play(const QuestionSet &qset)
@@ -40,10 +72,13 @@ void Player:: play(const QuestionSet &qset)
         cout<<"\nQuestion"<< "(" << i+1 <<"/" <<qset.getCount() << ")" << endl
             << qset.getQuestion(i).getText()<<endl;
 
-        cout<<"Enter Answer : ";
+        cout<<"Enter Answer :";
         string answer;
-        cin>>answer;
-
+        if (i==0)
+        {
+            cin.ignore();
+        }
+        getline(cin,answer);
         if (answer == qset.getQuestion(i).getAnswer())
         {
             cout<<"Correct Answer"<<endl;
@@ -209,14 +244,14 @@ int Player :: signIn()
                 level = stoi(fileLevel);
                 xp = stoi(fileXP);
                 cout << "Logged in successfully." << endl;
-                break;
+                return 1;
             }
 
             else{
                 cout << "Wrong password. Please try again." << endl;
             }
             file.close();
-            return 1;
+            return 0;
             break;
         } 
         
@@ -225,7 +260,8 @@ int Player :: signIn()
     if(!userFound)
     {
         cout << "Username not found"<<endl;
-        return 404;
+        return 0;
     }
 
+    return 0;
 }

@@ -14,7 +14,7 @@ private:
 public:
     Player() : User(1), level(0), xp(0) {}
 
-    void initUser();
+    int initUser();
 
     void play(const QuestionSet &qset);
 
@@ -22,6 +22,7 @@ public:
 
     int signIn();
     void signUp(int x);
+    void display();
 };
 
 #endif
