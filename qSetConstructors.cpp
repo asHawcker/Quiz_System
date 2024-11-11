@@ -1,5 +1,6 @@
 #include "QuestionSet.hpp"
-
+#include <sstream>
+#include <string>
 QuestionSet::QuestionSet(){
     set = nullptr;
     size = 0;
@@ -12,37 +13,50 @@ QuestionSet::QuestionSet(int id, int s){
     set = new Question[size];
     count = 0;
 }
-QuestionSet::QuestionSet(const char* id, int s, const char* filename){
-    setID = stringToInt(id);
-    size = s;
-    set = new Question[size];
-    count = 0;
-    ifstream file("qdata.csv");
+QuestionSet::QuestionSet(const char setID[], int s, const char filename[]) {
+    this->setID = stringToInt(setID);
+    this->size = s;
+    this->count = 0;
+    set = new Question[size];  // Allocate memory for Question array
 
-    char line[1000];
+    ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return;
+    }
 
-    while (file.getline(line, sizeof(line)))
-    {   
-        
-        if (createQuestion(line).getID() == setID){
-            set[count++] = createQuestion(line);
+    string line;
+    while (getline(file, line)) {
+        if (line.empty()) continue;  // Skip empty lines
+
+        // Check if array capacity is reached
+        if (count >= size) {
+            std::cerr << "Reached maximum capacity of question set." << std::endl;
+            break;
         }
+
+        // Create a Question object from the line and add to the set
+        this->set[count++] = createQuestion(line.c_str());
     }
 
     file.close();
 }
-QuestionSet::~QuestionSet(){
-    fstream fi;
-    fi.open("qdata.csv", ios::out);
-    cout<<"HERE";
-    for (int i=0;i<getCount();i++){
-        Question temp;
-        temp = getQuestion(i);
-        fi<<temp.getID()<<","<<temp.getText()<<","<<temp.getAuthor()<<","<<temp.getAnswer()<<","<<temp.getXP()<<"\n";
+QuestionSet::~QuestionSet() {
+    std::ofstream file("qdata.csv", std::ios::out);
+    if (!file.is_open()) {
+        std::cerr << "Error opening file for writing: qdata.csv" << std::endl;
+        return;
     }
 
-    fi.close();
+    for (int i = 0; i < count; ++i) {
+        Question temp = set[i];
+        file << temp.getID() << ","
+             << temp.getText() << ","
+             << temp.getAuthor() << ","
+             << temp.getAnswer() << ","
+             << temp.getXP() << "\n";
+    }
 
-    delete []set;
-    
+    file.close();
+    delete[] set; 
 }

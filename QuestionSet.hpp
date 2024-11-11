@@ -3,10 +3,11 @@
 #include "Question.hpp"
 
 class QuestionSet{
-friend int AddQuestion(QuestionSet& qSet,Question& q){
+friend int AddQuestion(QuestionSet& qSet,Question q){
     if (qSet.count >= qSet.size) return 0; //returns 0 if addition is not possible
     if (q.getID() != qSet.setID) return -1; // returns -1 if there is a mismatch in qSet.setID and q.setID
     qSet.set[qSet.count++] = q;
+    return 1;
 }
 friend int removeQuestion(QuestionSet& qSet, int qNumber){
     if (qSet.count == 0) return 0; // Empty question set
@@ -15,7 +16,7 @@ friend int removeQuestion(QuestionSet& qSet, int qNumber){
     for (int i=qNumber-1; i<qSet.count;i++){
         qSet.set[i] = qSet.set[i+1];
     }
-
+    return 1;
 }
 private:
     int setID;

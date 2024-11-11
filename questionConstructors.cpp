@@ -1,8 +1,11 @@
 #include "Question.hpp"
 
 Question::Question()
-{
-    text = author = answer = nullptr;
+{   setID = nullptr;
+    text = nullptr;
+    author = nullptr;
+    answer = nullptr;
+    points = 0;
 }
 
 Question::Question(const char id[], const char txt[], const char auth[], const char ans[], int pts)

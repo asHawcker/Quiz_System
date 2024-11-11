@@ -1,3 +1,5 @@
+#ifndef USER_H
+#define USER_H
 #include <iostream>
 using namespace std;
 
@@ -22,3 +24,4 @@ public:
     friend istream &operator>>(istream &in, User &u);
     friend ostream &operator<<(ostream &out, const User &u);
 };
+#endif

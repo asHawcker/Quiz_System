@@ -24,41 +24,43 @@ void Admin::AdminInterface()
              << "4. See account details" << endl
              << "5. Back" << endl;
         cin >> n;
-        switch (n)
+        if (n == 1)
         {
-        case 1:
             cout << "Enter set ID: " << endl;
             cin >> setID;
-            if (1)
-            {
-                char qn[50], ans[50];
-                int pts;
-                cout << "Enter question: ";
-                cin.getline(qn, 50);
-                cout << "Enter answer: ";
-                cin.getline(ans, 50);
-                cout << "Enter points: ";
-                cin >> pts;
-                QuestionSet q(setID, 100, "qdata.csv");
-                Question q1(qn, qn, username, ans, pts); // const char [], const char [], const char [], const char [], int
-                AddQuestion(q, q1);
-            }
-            break;
-        case 2:
+            QuestionSet q(setID, 10, "qdata.csv");
+            char qn[50], ans[50];
+            int pts;
+            cin.ignore();
+            cout << "Enter question: ";
+            cin.getline(qn, 50);
+            cout << "Enter answer: ";
+            cin.getline(ans, 50);
+            cout << "Enter points: ";
+            cin >> pts;
+            Question q1((const char *)setID, (const char *)qn, username.c_str(), (const char *)ans, pts);
+            q1.show();
+            cout << AddQuestion(q, q1);
+        }
+        else if (n == 2)
+        {
+        }
+        else if (n == 3)
+        {
+            Admin a1;
+            a1.signup();
+        }
+        else if (n == 4)
+        {
 
-            break;
-        case 3:
-            if (1)
-            {
-                Admin a1;
-                a1.signup();
-            }
-            break;
-        case 4:
             printdetails();
-        case 5:
+        }
+        else if (n == 5)
+        {
             return;
-        default:
+        }
+        else
+        {
             cout << "Invalid choice" << endl;
         }
         cout << endl;
@@ -79,7 +81,7 @@ void Admin::Userlogin()
     int n = 0, a = 0;
     while (1)
     {
-        cout << "\033[2J\033[H";
+        // cout << "\033[2J\033[H";
 
         cout << "\tWelcome to Quiz Game" << endl
              << "This is the admin interface" << endl
