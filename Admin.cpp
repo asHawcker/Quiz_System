@@ -19,11 +19,12 @@ void Admin::AdminInterface()
 
         cout << "\tAdmin" << endl
              << "Select option: " << endl
-             << "1. Add Question" << endl
-             << "2. Remove Question" << endl
-             << "3. Add new Admin" << endl
-             << "4. See account details" << endl
-             << "5. Back" << endl;
+             << "1. Show Questions" << endl
+             << "2. Add Question" << endl
+             << "3. Remove Question" << endl
+             << "4. Add new Admin" << endl
+             << "5. See account details" << endl
+             << "6. Back" << endl;
         cin >> n;
         if (cin.fail())
         {
@@ -32,11 +33,19 @@ void Admin::AdminInterface()
             cout << "Invalid Input. Please Enter a valid integer input." << endl;
         }
 
-        if (n == 1)
+        else if (n == 1)
         {
             cout << "Enter set ID: " << endl;
             cin >> setID;
-            QuestionSet q(setID, 10, "qdata.csv");
+            QuestionSet q(setID, 100, "qdata.csv");
+            q.show();
+        }
+
+        else if (n == 2)
+        {
+            cout << "Enter set ID: " << endl;
+            cin >> setID;
+            QuestionSet q(setID, 100, "qdata.csv");
             char qn[50], ans[50];
             int pts;
             cin.ignore();
@@ -50,7 +59,7 @@ void Admin::AdminInterface()
             q1.show();
             cout << AddQuestion(q, q1);
         }
-        else if (n == 2)
+        else if (n == 3)
         {
             while (1)
                 {
@@ -68,10 +77,10 @@ void Admin::AdminInterface()
                         cout << "Invalid Input. Please Enter a valid integer input." << endl;
                         continue;
                     }
-                    
+
                     if (choice == 1)
                     {
-                        QuestionSet q(setID, 10, "qdata.csv");
+                        QuestionSet q(setID, 100, "qdata.csv");
                         q.show();
                     }
                     else if (choice == 2)
@@ -79,7 +88,7 @@ void Admin::AdminInterface()
                         int qno;
                         cout << "Enter question number: ";
                         cin >> qno;
-                        QuestionSet q(setID, 10, "qdata.csv");
+                        QuestionSet q(setID, 100, "qdata.csv");
                         removeQuestion(q, qno);
                     }
                     else if (choice == 3)
@@ -92,17 +101,17 @@ void Admin::AdminInterface()
                     }
              }
         }
-        else if (n == 3)
+        else if (n == 4)
         {
             Admin a1;
             a1.signup();
         }
-        else if (n == 4)
+        else if (n == 5)
         {
 
             printdetails();
         }
-        else if (n == 5)
+        else if (n == 6)
         {
             return;
         }
