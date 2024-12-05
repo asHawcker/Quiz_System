@@ -4,21 +4,23 @@
 
 int main(){
 
-    QuestionSet q("1", 20, "qdata.csv");
-    q.show();
-    Question q1("1","newQ","ME","peacock",90);
-    Question q2;
-    q2=q1;
-    q1.show();
-    q2.show();
-    AddQuestion(q,q1);
-    AddQuestion(q,q1);
-    AddQuestion(q,q1);
-    AddQuestion(q,q1);
-    AddQuestion(q,q1);
-    AddQuestion(q,q1);
+    QuestionSet qSet("SET1", 20, "qdata.csv");
+    
     cout<<"\n\n----------------------------"<<endl;
-    q.show();
-
+    qSet.show();
+    try{
+        cout<<removeQuestion(qSet,4)<<endl;
+    }
+    catch(const char* e){
+        if (e=="IndexOutOfRange"){
+            cout<<"Index Out Of Range."<<endl;
+        }
+        else if (e=="EmptySet"){
+            cout<<"Empty Set"<<endl;
+        }
+    }
+    qSet.show();
+    // qSet.getQuestion(2)->display();
+    // cout<<qSet.getQuestion(2)->checkAnswer();
     return 0;
 }

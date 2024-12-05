@@ -1,16 +1,22 @@
 #include "Question.hpp"
 
-int stringToInt(const char* str){
-        int num = 0;
+int stringToInt(const std::string& str) {
+    int num = 0;
     int sign = 1;
-    if (*str == '-') {
+    size_t i = 0;
+
+    if (str[i] == '-') {
         sign = -1;
-        ++str;
+        i++;
     }
-    
-    while (*str) {
-        num = num * 10 + (*str - '0');
-        ++str;
+
+    while (i < str.size()) {
+        if (str[i] < '0' || str[i] > '9') {
+            return 0;
+        }
+        num = num * 10 + (str[i] - '0');
+        i++;
     }
+
     return num * sign;
 }

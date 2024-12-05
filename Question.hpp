@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <vector>
 // #include "miscFunc.hpp"
 using namespace std;
 
@@ -11,32 +12,34 @@ class Question
 {
 
 protected:
-    char *setID;
-    char *text;
-    char *author;
-    char *answer;
+    string setID;
+    string text;
+    string author;
     int points;
 
 public:
-    Question();
-    Question(const char [], const char [], const char [], const char [], int);
+    Question(const string &id, const string &questionText, const string &questionAuthor, int xp = 0):setID(id), text(questionText), author(questionAuthor), points(xp) {}
     Question(Question&);
-    ~Question();
-    int show();
+    virtual ~Question() = default;
+    virtual void display() const = 0;
+    virtual bool checkAnswer() const{};
+    virtual string serialize() const = 0;
+
     int getID();
     Question& operator=(const Question&);
     int getXP(){return points;}
-    char* getAnswer(){
-        return answer;
-    }
-    char* getText(){
+    string getText(){
         return text;
     }
-    char* getAuthor(){
+    string getAuthor(){
         return author;
     }
 };
-Question createQuestion(const char *);
-int stringToInt(const char* str);
+int stringToInt(const string& str);
+
+
+
+
+
 
 #endif

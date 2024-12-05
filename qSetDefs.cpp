@@ -1,10 +1,11 @@
 #include "QuestionSet.hpp"
 
 int QuestionSet::show(){
-    for (int i=0;i<count;i++){
-        cout << i+1 << '\t';;
-        set[i].show();
-    }
+    for (size_t i = 0; i < set.size(); ++i) {
+            cout << "Question " << i + 1 << ": ";
+            set[i]->display();
+            cout << endl;
+        }
     return 0;
 }
 
