@@ -71,7 +71,7 @@ void Admin::AdminInterface()
     while (1)
     {
         int n;
-        char setID[10];
+        string setID;
         //cout << "\033[2J\033[H";
 
         cout << "\tAdmin" << endl
@@ -102,19 +102,27 @@ void Admin::AdminInterface()
         {
             cout << "Enter set ID: " << endl;
             cin >> setID;
-            QuestionSet q(setID, 100, "qdata.csv");
-            char qn[50], ans[50];
+            if (!(setID == "1" || setID == "2" || setID == "3" || setID == "4" || setID == "5")) throw("SetNotFound");
+            setID = "SET"+setID;
+            cout <<setID;
+            QuestionSet q(setID, 100, setID+".csv");
+
+            cout<<"Enter question type: \n";
+            int temp_c;
+            
+
+            string qn, ans;
             int pts;
             cin.ignore();
             cout << "Enter question: ";
-            cin.getline(qn, 50);
+            cin>>qn;
             cout << "Enter answer: ";
-            cin.getline(ans, 50);
+            cin>>ans;
             cout << "Enter points: ";
             cin >> pts;
-            Question q1((const char *)setID, (const char *)qn, username.c_str(), (const char *)ans, pts);
+            Question q1(setID, (const char *)qn, username.c_str(), (const char *)ans, pts);
             q1.show();
-            cout << AddQuestion(q, q1);
+            AddQuestion(q, new );
         }
         else if (n == 3)
         {
