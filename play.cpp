@@ -100,102 +100,132 @@ void Player:: play(const QuestionSet &qset)
 
 void Player :: saveToCSV()
 {
-    const string filename = "PlayerData.csv";
-    ifstream fileIn(filename);
-    ofstream fileOut("temp.csv");
-
-    if (!fileIn.is_open() || !fileOut.is_open())
+    try
     {
-        cout << "Failed to open the file" << endl;
-        return;
-    }
+        const string filename = "PlayerData.csv";
+        ifstream fileIn(filename);
+        ofstream fileOut("temp.csv");
 
-    string line;
-    bool userFound = false;
-
-    // Check each line to see if the current player's data already exists
-    while (getline(fileIn, line)) 
-    {
-        stringstream ss(line);
-        string existingUsername;
-        getline(ss, existingUsername, ',');
-
-       
-        if (existingUsername == username) 
+        if (!fileIn.is_open() || !fileOut.is_open())
         {
-
-            fileOut << username << "," << age << "," << email << "," << pass << "," 
-                    << type << "," << level << "," << xp << "\n";
-            userFound = true;
-        } 
-
-        else 
-        {
-            fileOut << line << "\n";
+            throw runtime_error("Faled to open PlayerData.csv");
         }
 
+        string line;
+        bool userFound = false;
+
+        // Check each line to see if the current player's data already exists
+        while (getline(fileIn, line)) 
+        {
+            stringstream ss(line);
+            string existingUsername;
+            getline(ss, existingUsername, ',');
+
+        
+            if (existingUsername == username) 
+            {
+
+                fileOut << username << "," << age << "," << email << "," << pass << "," 
+                        << type << "," << level << "," << xp << "\n";
+                userFound = true;
+            } 
+
+            else 
+            {
+                fileOut << line << "\n";
+            }
+
+        }
+
+        // If the player was not found, add their info as a new entry
+        if (!userFound) {
+            fileOut << username << "," << age << "," << email << "," << pass << "," 
+                    << type << "," << level << "," << xp << "\n";
+        }
+
+        // Close files
+        fileIn.close();
+        fileOut.close();
+
+        // Replace the original file with the updated temp file
+        if(remove(filename.c_str())!=0 || rename("temp.csv", filename.c_str())!=0)
+        {
+            throw runtime_error("Failed to update CSV file");
+        }
+
+        // cout << "Player information saved successfully." << endl;
+        
     }
 
-    // If the player was not found, add their info as a new entry
-    if (!userFound) {
-        fileOut << username << "," << age << "," << email << "," << pass << "," 
-                << type << "," << level << "," << xp << "\n";
+    catch (const runtime_error &e)
+    {
+        cerr << "A runtime error occured while handling PlayerData.csv" << endl << e.what() << endl;
     }
 
-    // Close files
-    fileIn.close();
-    fileOut.close();
 
-    // Replace the original file with the updated temp file
-    remove(filename.c_str());
-    rename("temp.csv", filename.c_str());
+    catch(const exception& e)
+    {
+        std::cerr <<"An exception occured while handling PlayerData.csv" << endl << e.what() << endl;
+    }
 
-    // cout << "Player information saved successfully." << endl;
-
+    catch (...)
+    {
+        cerr << "An unknown error has occured while saving the player information"<< endl;
+    }
 }
 
 void Player :: signUp(int x)
 {
     string filename;
-
-    
     filename = "PlayerData.csv";
-
-    ofstream file;
-    file.open(filename, ios::app);
-    if (!file.is_open())
+    
+    try
     {
-        cerr << "Failed to open the file." << endl;
-        return;
+        ofstream file;
+        file.open(filename, ios::app);
+        if (!file.is_open())
+        {
+            throw runtime_error("Failed to open PlayerData.csv");
+        }
+
+        while (x == 0)
+        {
+            cout << "Enter username: ";
+            cin>> username;
+            if (search(username))
+                cout << "Username already in use. Please try another name.\n";
+            else
+                break;
+        }
+
+        cout << "Enter your age: ";
+        cin >> age;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        cout << "Enter your email: ";
+        cin>>email;
+
+        cout << "Enter your password: ";
+        cin >> pass;
+
+        type = 1;
+        level = xp = 0;
+        file << username << "," << age << "," << email << "," << pass << "," << type << "," << level << "," << xp << "\n";
+        file.close();
+
+        cout << "Information saved successfully.\n"
+            << endl;
     }
 
-    while (x == 0)
+    catch (const runtime_error &e)
     {
-        cout << "Enter username: ";
-        cin>> username;
-        if (search(username))
-            cout << "Username already in use. Please try another name.\n";
-        else
-            break;
+        cerr << "A Runtime error has occured while handling PlayerData.csv" << e.what() << endl;
     }
-
-    cout << "Enter your age: ";
-    cin >> age;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-    cout << "Enter your email: ";
-    cin>>email;
-
-    cout << "Enter your password: ";
-    cin >> pass;
-
-    type = 1;
-    level = xp = 0;
-    file << username << "," << age << "," << email << "," << pass << "," << type << "," << level << "," << xp << "\n";
-    file.close();
-
-    cout << "Information saved successfully.\n"
-         << endl;
+    
+    catch (...)
+    {
+        cerr << "An unknown error has occured while handling PlayerData.csv"<<endl;
+    }
 }
 
 int Player :: signIn()
@@ -212,55 +242,62 @@ int Player :: signIn()
 
     if (!file.is_open())
     {
-        cout << "Failed to open the file." << endl;
+        cerr << "Failed to open the file PlayerData.csv." << endl;
         return -1;//file Not Found
     }
 
-    string line;
-    while (getline(file, line))
+    try
     {
-        stringstream ss(line);
-        string fileUsername, filePassword, fileAge, fileEmail, fileType, fileLevel, fileXP;
-        
-        getline(ss,fileUsername,',');
-        getline(ss,fileAge,',');
-        getline(ss,fileEmail,',');
-        getline(ss,filePassword, ',');
-        getline(ss,fileType,',');
-        getline(ss,fileLevel,',');
-        getline(ss,fileXP,',');
-
-        if (InputUsername == fileUsername)
+        string line;
+        while (getline(file, line))
         {
-            userFound = true;
+            stringstream ss(line);
+            string fileUsername, filePassword, fileAge, fileEmail, fileType, fileLevel, fileXP;
+            
+            getline(ss,fileUsername,',');
+            getline(ss,fileAge,',');
+            getline(ss,fileEmail,',');
+            getline(ss,filePassword, ',');
+            getline(ss,fileType,',');
+            getline(ss,fileLevel,',');
+            getline(ss,fileXP,',');
 
-            if(InputPassword == filePassword)
+            if (InputUsername == fileUsername)
             {
-                username = fileUsername;
-                age = stoi(fileAge);
-                email = fileEmail;
-                pass = filePassword;
-                type = stoi(fileType);
-                level = stoi(fileLevel);
-                xp = stoi(fileXP);
-                cout << "Logged in successfully." << endl;
-                return 1;
-            }
+                userFound = true;
 
-            else{
-                cout << "Wrong password. Please try again." << endl;
-            }
-            file.close();
+                if(InputPassword == filePassword)
+                {
+                    username = fileUsername;
+                    age = stoi(fileAge);
+                    email = fileEmail;
+                    pass = filePassword;
+                    type = stoi(fileType);
+                    level = stoi(fileLevel);
+                    xp = stoi(fileXP);
+                    cout << "Logged in successfully." << endl;
+                    return 1;
+                }
+
+                else{
+                    cout << "Wrong password. Please try again." << endl;
+                }
+                file.close();
+                return 0;
+                break;
+            } 
+            
+        }
+        file.close();
+        if(!userFound)
+        {
+            cout << "Username not found"<<endl;
             return 0;
-            break;
-        } 
-        
+        }
     }
-    file.close();
-    if(!userFound)
+    catch(const exception& e)
     {
-        cout << "Username not found"<<endl;
-        return 0;
+        std::cerr << e.what() << '\n';
     }
 
     return 0;
