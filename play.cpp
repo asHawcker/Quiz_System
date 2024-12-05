@@ -160,17 +160,20 @@ void Player :: saveToCSV()
     catch (const runtime_error &e)
     {
         cerr << "A runtime error occured while handling PlayerData.csv" << endl << e.what() << endl;
+        exit(0);
     }
 
 
     catch(const exception& e)
     {
         std::cerr <<"An exception occured while handling PlayerData.csv" << endl << e.what() << endl;
+        exit(0);
     }
 
     catch (...)
     {
         cerr << "An unknown error has occured while saving the player information"<< endl;
+        exit(0);
     }
 }
 
@@ -220,11 +223,13 @@ void Player :: signUp(int x)
     catch (const runtime_error &e)
     {
         cerr << "A Runtime error has occured while handling PlayerData.csv" << e.what() << endl;
+        exit(0);
     }
     
     catch (...)
     {
         cerr << "An unknown error has occured while handling PlayerData.csv"<<endl;
+        exit(0);
     }
 }
 
@@ -298,6 +303,7 @@ int Player :: signIn()
     catch(const exception& e)
     {
         std::cerr << e.what() << '\n';
+        exit(0);
     }
 
     return 0;
