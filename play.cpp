@@ -8,97 +8,98 @@ using namespace std;
 
 int Player :: initUser()
 {
-    int n=0;
+    int n = 0;
     int loggedin = 0;
 
     while (1)
     {
-        cout << "Welcome to Quiz Game"<<endl
-        << "Choose option: " << endl
-        << "1. Sign in" << endl
-        << "2. Sign up" << endl
-        << "3. Back to Main Menu" << endl;
+        cout << "\033[1;34mWelcome to Quiz Game\033[0m" << endl
+             << "\033[1;33mChoose option: \033[0m" << endl
+             << "\033[1;32m1. Sign in\033[0m" << endl
+             << "\033[1;36m2. Sign up\033[0m" << endl
+             << "\033[1;31m3. Back to Main Menu\033[0m" << endl;
 
-        cout << "Enter choice: ";
+        cout << "\033[1;37mEnter choice: \033[0m";
         cin >> n;
         if (cin.fail())
         {
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Invalid Input. Please Enter a valid integer input." << endl;
+            cout << "\033[1;31mInvalid Input. Please Enter a valid integer input.\033[0m" << endl;
         }
 
         switch (n)
         {
-            case 1:
+        case 1:
+        {
+            loggedin = signIn();
+            if (loggedin == 1)
             {
-                loggedin = signIn();
-                if (loggedin == 1)
-                {
-                    return 1;
-                }
-                break;
+                return 1;
             }
-            case 2:
-            {
-                signUp(0);
-                break;
-            }
-            case 3:
-            {
-                return 0;
-                break;
-            }
-            default:
-                cout << "Invalid choice." << endl;
+            break;
+        }
+        case 2:
+        {
+            signUp(0);
+            break;
+        }
+        case 3:
+        {
+            return 0;
+            break;
+        }
+        default:
+            cout << "\033[1;31mInvalid choice.\033[0m" << endl;
         }
     }
 }
 
-void Player :: display()
+void Player ::display()
 {
-    cout << "Name: " << username << endl;
-    cout << "Age: " << age << endl;
-    cout << "Email: " << email << endl;
-    cout << "Level: " << level << endl;
-    cout << "XP: " << xp << endl;
+    cout << "\033[1;34mName: \033[0m" << username << endl;
+    cout << "\033[1;34mAge: \033[0m" << age << endl;
+    cout << "\033[1;34mEmail: \033[0m" << email << endl;
+    cout << "\033[1;34mLevel: \033[0m" << level << endl;
+    cout << "\033[1;34mXP: \033[0m" << xp << endl;
 }
 
-void Player:: play(const QuestionSet &qset)
+void Player::play(const QuestionSet &qset)
 {
     int currentscore = 0; // score of the current quiz
-    for (int i=0;i<qset.getCount();i++)
+    for (int i = 0; i < qset.getCount(); i++)
     {
-        cout<<"\nQuestion"<< "(" << i+1 <<"/" <<qset.getCount() << ")" << endl
-            << qset.getQuestion(i).getText()<<endl;
+        cout << "\033[1;36m\nQuestion"
+             << "(" << i + 1 << "/" << qset.getCount() << ")\033[0m" << endl
+             << "\033[1;33m" << qset.getQuestion(i).getText() << "\033[0m" << endl;
 
-        cout<<"Enter Answer :";
+        cout << "\033[1;37mEnter Answer :\033[0m";
         string answer;
-        if (i==0)
+        if (i == 0)
         {
             cin.ignore();
         }
-        getline(cin,answer);
+        getline(cin, answer);
         if (answer == qset.getQuestion(i).getAnswer())
         {
-            cout<<"Correct Answer"<<endl;
+            cout << "\033[1;32mCorrect Answer\033[0m" << endl;
             xp += qset.getQuestion(i).getXP();
             currentscore += qset.getQuestion(i).getXP();
         }
 
         else
         {
-            cout << "Your answer is wrong" << endl 
-                 << "Correct answer is : " << qset.getQuestion(i).getAnswer();
+            cout << "\033[1;31mYour answer is wrong\033[0m" << endl
+                 << "\033[1;34mCorrect answer is : " << qset.getQuestion(i).getAnswer() << "\033[0m";
         }
-
     }
-    level = xp/100;
-    cout << "\n\nQuiz Completed." << endl << "Your Score is : " <<currentscore <<endl;
+    level = xp / 100;
+    cout << "\n\n\033[1;32mQuiz Completed.\033[0m" << endl
+         << "\033[1;33mYour Score is : " << currentscore << "\033[0m" << endl;
     saveToCSV();
 }
 
-void Player :: saveToCSV()
+void Player ::saveToCSV()
 {
     try
     {
@@ -108,80 +109,72 @@ void Player :: saveToCSV()
 
         if (!fileIn.is_open() || !fileOut.is_open())
         {
-            throw runtime_error("Faled to open PlayerData.csv");
+            throw runtime_error("Failed to open PlayerData.csv");
         }
 
         string line;
         bool userFound = false;
 
-        // Check each line to see if the current player's data already exists
-        while (getline(fileIn, line)) 
+        while (getline(fileIn, line))
         {
             stringstream ss(line);
             string existingUsername;
             getline(ss, existingUsername, ',');
 
-        
-            if (existingUsername == username) 
+            if (existingUsername == username)
             {
-
-                fileOut << username << "," << age << "," << email << "," << pass << "," 
+                fileOut << username << "," << age << "," << email << "," << pass << ","
                         << type << "," << level << "," << xp << "\n";
                 userFound = true;
-            } 
+            }
 
-            else 
+            else
             {
                 fileOut << line << "\n";
             }
-
         }
 
-        // If the player was not found, add their info as a new entry
-        if (!userFound) {
-            fileOut << username << "," << age << "," << email << "," << pass << "," 
+        if (!userFound)
+        {
+            fileOut << username << "," << age << "," << email << "," << pass << ","
                     << type << "," << level << "," << xp << "\n";
         }
 
-        // Close files
         fileIn.close();
         fileOut.close();
 
-        // Replace the original file with the updated temp file
-        if(remove(filename.c_str())!=0 || rename("temp.csv", filename.c_str())!=0)
+        if (remove(filename.c_str()) != 0 || rename("temp.csv", filename.c_str()) != 0)
         {
             throw runtime_error("Failed to update CSV file");
         }
-
-        // cout << "Player information saved successfully." << endl;
-        
     }
 
     catch (const runtime_error &e)
     {
-        cerr << "A runtime error occured while handling PlayerData.csv" << endl << e.what() << endl;
+        cerr << "\033[1;31mA runtime error occurred while handling PlayerData.csv\033[0m" << endl
+             << e.what() << endl;
         exit(0);
     }
 
-
-    catch(const exception& e)
+    catch (const exception &e)
     {
-        std::cerr <<"An exception occured while handling PlayerData.csv" << endl << e.what() << endl;
+        std::cerr << "\033[1;31mAn exception occurred while handling PlayerData.csv\033[0m" << endl
+                  << e.what() << endl;
         exit(0);
     }
 
     catch (...)
     {
-        cerr << "An unknown error has occured while saving the player information"<< endl;
+        cerr << "\033[1;31mAn unknown error has occurred while saving the player information\033[0m" << endl;
         exit(0);
     }
 }
 
-void Player :: signUp(int x)
+void Player ::signUp(int x)
 {
     string filename;
     filename = "PlayerData.csv";
-    
+
     try
     {
         ofstream file;
@@ -193,22 +186,22 @@ void Player :: signUp(int x)
 
         while (x == 0)
         {
-            cout << "Enter username: ";
-            cin>> username;
+            cout << "\033[1;37mEnter username: \033[0m";
+            cin >> username;
             if (search(username))
-                cout << "Username already in use. Please try another name.\n";
+                cout << "\033[1;31mUsername already in use. Please try another name.\033[0m\n";
             else
                 break;
         }
 
-        cout << "Enter your age: ";
+        cout << "\033[1;37mEnter your age: \033[0m";
         cin >> age;
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        cout << "Enter your email: ";
-        cin>>email;
+        cout << "\033[1;37mEnter your email: \033[0m";
+        cin >> email;
 
-        cout << "Enter your password: ";
+        cout << "\033[1;37mEnter your password: \033[0m";
         cin >> pass;
 
         type = 1;
@@ -216,29 +209,29 @@ void Player :: signUp(int x)
         file << username << "," << age << "," << email << "," << pass << "," << type << "," << level << "," << xp << "\n";
         file.close();
 
-        cout << "Information saved successfully.\n"
-            << endl;
+        cout << "\033[1;32mInformation saved successfully.\033[0m\n"
+             << endl;
     }
 
     catch (const runtime_error &e)
     {
-        cerr << "A Runtime error has occured while handling PlayerData.csv" << e.what() << endl;
+        cerr << "\033[1;31mA Runtime error has occurred while handling PlayerData.csv\033[0m" << e.what() << endl;
         exit(0);
     }
-    
+
     catch (...)
     {
-        cerr << "An unknown error has occured while handling PlayerData.csv"<<endl;
+        cerr << "\033[1;31mAn unknown error has occurred while handling PlayerData.csv\033[0m" << endl;
         exit(0);
     }
 }
 
-int Player :: signIn()
+int Player ::signIn()
 {
     string InputUsername, InputPassword;
-    cout << "Enter username : ";
+    cout << "\033[1;37mEnter username : \033[0m";
     cin >> InputUsername;
-    cout << "Enter password : ";
+    cout << "\033[1;37mEnter password : \033[0m";
     cin >> InputPassword;
 
     bool userFound = false;
@@ -247,8 +240,8 @@ int Player :: signIn()
 
     if (!file.is_open())
     {
-        cerr << "Failed to open the file PlayerData.csv." << endl;
-        return -1;//file Not Found
+        cerr << "\033[1;31mFailed to open the file PlayerData.csv.\033[0m" << endl;
+        return -1;
     }
 
     try
@@ -258,20 +251,20 @@ int Player :: signIn()
         {
             stringstream ss(line);
             string fileUsername, filePassword, fileAge, fileEmail, fileType, fileLevel, fileXP;
-            
-            getline(ss,fileUsername,',');
-            getline(ss,fileAge,',');
-            getline(ss,fileEmail,',');
-            getline(ss,filePassword, ',');
-            getline(ss,fileType,',');
-            getline(ss,fileLevel,',');
-            getline(ss,fileXP,',');
+
+            getline(ss, fileUsername, ',');
+            getline(ss, fileAge, ',');
+            getline(ss, fileEmail, ',');
+            getline(ss, filePassword, ',');
+            getline(ss, fileType, ',');
+            getline(ss, fileLevel, ',');
+            getline(ss, fileXP, ',');
 
             if (InputUsername == fileUsername)
             {
                 userFound = true;
 
-                if(InputPassword == filePassword)
+                if (InputPassword == filePassword)
                 {
                     username = fileUsername;
                     age = stoi(fileAge);
@@ -280,30 +273,28 @@ int Player :: signIn()
                     type = stoi(fileType);
                     level = stoi(fileLevel);
                     xp = stoi(fileXP);
-                    cout << "Logged in successfully." << endl;
+                    cout << "\033[1;32mLogged in successfully.\033[0m" << endl;
                     return 1;
                 }
 
-                else{
-                    cout << "Wrong password. Please try again." << endl;
+                else
+                {
+                    cout << "\033[1;31mIncorrect Password.\033[0m" << endl;
+                    return 0;
                 }
-                file.close();
-                return 0;
-                break;
-            } 
-            
+            }
         }
-        file.close();
-        if(!userFound)
+
+        if (!userFound)
         {
-            cout << "Username not found"<<endl;
+            cout << "\033[1;31mIncorrect Username.\033[0m" << endl;
             return 0;
         }
     }
-    catch(const exception& e)
+    catch (...)
     {
-        std::cerr << e.what() << '\n';
-        exit(0);
+        cerr << "\033[1;31mAn error occurred while processing the file.\033[0m" << endl;
+        return -1;
     }
 
     return 0;
