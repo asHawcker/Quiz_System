@@ -2,4 +2,4 @@ MCQ,SET1,What is the capital of Germany?,sam,Berlin;Munich;Hamburg;Frankfurt,10,
 MCQ,SET1,Which planet is known as the Red Planet?,sam,Earth;Venus;Mars;Jupiter,10,2
 INT,SET1,What is 5 x 6?,sam,30,10,0
 TEXT,SET1,Who discovered gravity?,sam,Isaac Newton,15
-MCQ,SET1,What is the boiling point of water?,sam,100°C;0°C;50°C;150°C,10,0
+MCQ,6,Who developed C++?,anurag2,Guido Van Rossum;Dennis Ritchie;Bjane Stroustrup;Guido Van Rossum,100,2
