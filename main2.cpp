@@ -40,8 +40,6 @@ void player()
             {   string setID;
                 cout << "Enter set ID: " << endl;
                 cin >> setID;
-                if (!(setID == "1" || setID == "2" || setID == "3" || setID == "4" || setID == "5"))
-                    throw("SetNotFound");
                 setID = "SET" + setID;
                 cout << setID;
                 QuestionSet q(setID, 100, setID + ".csv"); // add filename when different question sets are stored in different ids
