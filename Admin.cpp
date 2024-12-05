@@ -9,7 +9,9 @@
 #include <limits>
 #define pin 123456
 
-static string filename="AdminData.csv";
+void addQuestionToSet(QuestionSet &questionSet,string);
+
+static string filename = "AdminData.csv";
 
 Admin::Admin() : User(0)
 {
@@ -72,7 +74,7 @@ void Admin::AdminInterface()
     {
         int n;
         string setID;
-        //cout << "\033[2J\033[H";
+        // cout << "\033[2J\033[H";
 
         cout << "\tAdmin" << endl
              << "Select option: " << endl
@@ -80,8 +82,9 @@ void Admin::AdminInterface()
              << "2. Add Question" << endl
              << "3. Remove Question" << endl
              << "4. Add new Admin" << endl
-             << "5. See account details" << endl
-             << "6. Back" << endl;
+             << "5. Create new Question Set"<<endl
+             << "6. See account details" << endl
+             << "0. Back" << endl;
         cin >> n;
         if (cin.fail())
         {
@@ -94,89 +97,118 @@ void Admin::AdminInterface()
         {
             cout << "Enter set ID: " << endl;
             cin >> setID;
-            QuestionSet q(setID, 100, "qdata.csv");
+            setID = "SET" + setID;
+            cout << setID;
+            QuestionSet q(setID, 100, setID + ".csv");
             q.show();
+            cin.ignore();
         }
 
         else if (n == 2)
         {
             cout << "Enter set ID: " << endl;
             cin >> setID;
-            if (!(setID == "1" || setID == "2" || setID == "3" || setID == "4" || setID == "5")) throw("SetNotFound");
-            setID = "SET"+setID;
-            cout <<setID;
-            QuestionSet q(setID, 100, setID+".csv");
+            setID = "SET" + setID;
+            cout << setID;
+            QuestionSet q(setID, 100, setID + ".csv");
 
-            cout<<"Enter question type: \n";
-            int temp_c;
-            
-
-            string qn, ans;
-            int pts;
-            cin.ignore();
-            cout << "Enter question: ";
-            cin>>qn;
-            cout << "Enter answer: ";
-            cin>>ans;
-            cout << "Enter points: ";
-            cin >> pts;
-            Question q1(setID, (const char *)qn, username.c_str(), (const char *)ans, pts);
-            q1.show();
-            AddQuestion(q, new );
+            addQuestionToSet(q,username);
         }
         else if (n == 3)
         {
             while (1)
+            {
+                int choice;
+                cout << "\tRemove Question" << endl;
+                cout << "Select option: " << endl
+                     << "1. Show questions" << endl
+                     << "2. Remove Question" << endl
+                     << "3. Back" << endl;
+                cin >> choice;
+                if (cin.fail())
                 {
-                    int choice;
-                    cout << "\tRemove Question" << endl;
-                    cout << "Select option: " << endl
-                        << "1. Show questions" << endl
-                        << "2. Remove Question" << endl
-                        << "3. Back" << endl;
-                    cin >> choice;
-                    if (cin.fail())
-                    {
-                        cin.clear();
-                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                        cout << "Invalid Input. Please Enter a valid integer input." << endl;
-                        continue;
-                    }
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    cout << "Invalid Input. Please Enter a valid integer input." << endl;
+                    continue;
+                }
 
-                    if (choice == 1)
-                    {
-                        QuestionSet q(setID, 100, "qdata.csv");
-                        q.show();
+                if (choice == 1)
+                {   
+                    cout << "Enter set ID: " << endl;
+                    cin >> setID;
+                    setID = "SET" + setID;
+                    cout << setID;
+                    QuestionSet q(setID, 100, setID+".csv");
+                    q.show();
+                }
+                else if (choice == 2)
+                {   
+                    cout << "Enter set ID: " << endl;
+                    cin >> setID;
+                    setID = "SET" + setID;
+                    cout << setID;
+                    QuestionSet q(setID, 100, setID+".csv");
+                    q.show();
+                    int qno;
+                    cout << "Enter question number: ";
+                    cin >> qno;
+                    try{
+                        removeQuestion(q,qno);
                     }
-                    else if (choice == 2)
-                    {
-                        int qno;
-                        cout << "Enter question number: ";
-                        cin >> qno;
-                        QuestionSet q(setID, 100, "qdata.csv");
-                        removeQuestion(q, qno);
+                    catch(const char* e){
+                        if (e=="IndexOutOfRange"){
+                            cout<<"Index Out Of Range."<<endl;
+                        }
+                        else if (e=="EmptySet"){
+                            cout<<"Empty Set"<<endl;
+                        }
                     }
-                    else if (choice == 3)
-                    {
-                        break;  // Break out of the inner loop to return to main menu
-                    }
-                    else
-                    {
-                        cout << "Invalid choice" << endl;
-                    }
-             }
+                }
+                else if (choice == 3)
+                {
+                    break; // Break out of the inner loop to return to main menu
+                }
+                else
+                {
+                    cout << "Invalid choice" << endl;
+                }
+            }
         }
         else if (n == 4)
         {
             Admin a1;
+            cin.ignore();
             a1.signup();
         }
-        else if (n == 5)
+        else if (n==5){
+            try{
+            string setID;
+            cout << "Enter set ID: " << endl;
+            cin >> setID;
+            setID = "SET" + setID;
+            ifstream file(setID+".csv");
+            
+                if (file.good()){
+                    throw("FileExists");
+                }else{  
+                    ofstream file1(setID+".csv");
+                    cout << "\033[32mCreated a new Question set csv file..\033[0m\n";
+                    cin.ignore();
+                }
+            } catch(const char* e){
+                std::cout<<"Error : "<<e;
+            } catch(...){
+                cerr << "\033[1;31mAn error occurred while processing the file.\033[0m" << endl;
+            }
+        }
+        else if (n == 6)
         {
 
             printdetails();
+            cin.ignore();
         }
-        else if (n == 6)
+        else if (n == 0)
         {
             return;
         }
@@ -185,6 +217,7 @@ void Admin::AdminInterface()
             cout << "Invalid choice" << endl;
         }
         cout << endl;
+        cin.ignore();
     }
 }
 
@@ -264,4 +297,75 @@ ostream &operator<<(ostream &out, const User &u)
         << "Password: *********" << endl
         << "Account type: " << acctype << endl;
     return out;
+}
+
+void addQuestionToSet(QuestionSet &questionSet,string author)
+{
+    string questionType;
+    cout << "Enter question type (MCQ/INT/TEXT): ";
+    cin >> questionType;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    string id, text;
+    int xp;
+    cout << "Enter question ID: ";
+    getline(cin, id);
+    cout << "Enter question text: ";
+    getline(cin, text);
+
+    cout << "Enter XP for the question: ";
+    cin >> xp;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    Question *newQuestion = nullptr;
+    if (questionType == "MCQ")
+    {
+        vector<string> options;
+        int correctOption;
+
+        cout << "Enter MCQ options (separate by semicolon): ";
+        string optionsInput;
+        getline(cin, optionsInput);
+
+        istringstream ss(optionsInput);
+        string option;
+        while (getline(ss, option, ';'))
+        {
+            options.push_back(option);
+        }
+        cout << "Enter the correct option number (0-based index): ";
+        cin >> correctOption;
+
+        newQuestion = new MCQQuestion(id, text, author, options, correctOption, xp);
+    }
+    else if (questionType == "INT")
+    {
+        int answer;
+        cout << "Enter the correct integer answer: ";
+        cin >> answer;
+
+        newQuestion = new IntegerQuestion(id, text, author, answer, xp);
+    }
+    else if (questionType == "TEXT")
+    {
+        string answer;
+        cout << "Enter the correct text answer: ";
+        getline(cin, answer);
+
+        newQuestion = new TextQuestion(id, text, author, answer, xp);
+    }
+    else
+    {
+        cout << "Invalid question type!" << endl;
+        return;
+    }
+
+    try
+    {
+        AddQuestion(questionSet, newQuestion);
+        cout << "Question added successfully!" << endl;
+    }
+    catch (const char *errorMsg)
+    {
+        cout << "Error adding question: " << errorMsg << endl;
+        delete newQuestion;
+    }
 }

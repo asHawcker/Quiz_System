@@ -70,28 +70,22 @@ void Player::play(const QuestionSet &qset)
     for (int i = 0; i < qset.getCount(); i++)
     {
         cout << "\033[1;36m\nQuestion"
-             << "(" << i + 1 << "/" << qset.getCount() << ")\033[0m" << endl
-             << "\033[1;33m" << qset.getQuestion(i).getText() << "\033[0m" << endl;
+             << "(" << i + 1 << "/" << qset.getCount() << ")\033[0m" << endl;
 
-        cout << "\033[1;37mEnter Answer :\033[0m";
-        string answer;
-        if (i == 0)
-        {
-            cin.ignore();
-        }
-        getline(cin, answer);
-        if (answer == qset.getQuestion(i).getAnswer())
+        qset.getQuestion(i)->display();
+        
+        if (qset.getQuestion(i)->checkAnswer())
         {
             cout << "\033[1;32mCorrect Answer\033[0m" << endl;
-            xp += qset.getQuestion(i).getXP();
-            currentscore += qset.getQuestion(i).getXP();
+            xp += qset.getQuestion(i)->getXP();
+            currentscore += qset.getQuestion(i)->getXP();
         }
 
         else
         {
-            cout << "\033[1;31mYour answer is wrong\033[0m" << endl
-                 << "\033[1;34mCorrect answer is : " << qset.getQuestion(i).getAnswer() << "\033[0m";
+            cout << "\033[1;31mYour answer is wrong\033[0m" << endl;
         }
+        cin.ignore();
     }
     level = xp / 100;
     cout << "\n\n\033[1;32mQuiz Completed.\033[0m" << endl

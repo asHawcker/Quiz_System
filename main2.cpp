@@ -37,23 +37,27 @@ void player()
         switch (n)
         {
             case 1:
-            {
-                string setID;
-                cout << "Entering the quiz game" <<endl;
-                cout << "Enter the question set ID: ";
+            {   string setID;
+                cout << "Enter set ID: " << endl;
                 cin >> setID;
-                QuestionSet q(setID.c_str(), 100, "qdata.csv"); // add filename when different question sets are stored in different ids
+                if (!(setID == "1" || setID == "2" || setID == "3" || setID == "4" || setID == "5"))
+                    throw("SetNotFound");
+                setID = "SET" + setID;
+                cout << setID;
+                QuestionSet q(setID, 100, setID + ".csv"); // add filename when different question sets are stored in different ids
                 p.play(q);
                 break;
             }
             case 2:
                 p.display();
+                cin.ignore();
                 break;
             case 3:
                 return;
             default:
                 cout << "Invalid choice." << endl;
         }
+        cin.ignore();
     }
 }
 

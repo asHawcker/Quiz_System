@@ -157,36 +157,3 @@ void User::printdetails()
          << "Password: *********" << endl;
 }
 
-istream &operator>>(istream &in, User &u)
-{
-    cout << "Enter username: ";
-    getline(in, u.username);
-    if (u.search(u.username))
-    {
-        u.signin();
-    }
-    else
-    {
-        u.signup(1);
-    }
-    return in;
-}
-
-ostream &operator<<(ostream &out, const User &u)
-{
-    string acctype;
-
-    if (u.type == 0)
-        acctype = "Admin";
-    else if (u.type == 1)
-        acctype = "Player";
-    else
-        acctype = "Unknown";
-
-    out << "Username: " << u.username << endl
-        << "Age: " << u.age << endl
-        << "E-Mail: " << u.email << endl
-        << "Password: *********" << endl
-        << "Account type: " << acctype << endl;
-    return out;
-}
