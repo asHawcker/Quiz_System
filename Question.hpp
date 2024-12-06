@@ -22,7 +22,7 @@ public:
     Question(Question&);
     virtual ~Question() = default;
     virtual void display() const = 0;
-    virtual bool checkAnswer() const{};
+    virtual bool checkAnswer() const = 0;
     virtual string serialize() const = 0;
 
     int getID();
@@ -36,10 +36,4 @@ public:
     }
 };
 int stringToInt(const string& str);
-
-
-
-
-
-
 #endif
